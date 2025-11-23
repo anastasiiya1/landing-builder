@@ -9,10 +9,10 @@ export default function FooterSection({ contact }: FooterSectionProps) {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { key: 'twitter', icon: 'Ì∞¶', url: contact.social.twitter },
-    { key: 'facebook', icon: 'Ì≥ò', url: contact.social.facebook },
-    { key: 'linkedin', icon: 'Ì≤º', url: contact.social.linkedin },
-    { key: 'instagram', icon: 'Ì≥∏', url: contact.social.instagram },
+    { key: 'twitter', icon: 'X', url: contact.social.twitter },
+    { key: 'facebook', icon: 'FB', url: contact.social.facebook },
+    { key: 'linkedin', icon: 'LI', url: contact.social.linkedin },
+    { key: 'instagram', icon: 'IG', url: contact.social.instagram },
   ].filter(link => link.url);
 
   return (
@@ -26,7 +26,7 @@ export default function FooterSection({ contact }: FooterSectionProps) {
             </h3>
             <div className="space-y-4">
               <div className="flex items-center">
-                <span className="mr-3">Ì≥ß</span>
+                <span className="mr-3">@</span>
                 <a 
                   href={`mailto:${contact.email}`}
                   className="text-gray-300 hover:text-white transition-colors"
@@ -35,7 +35,7 @@ export default function FooterSection({ contact }: FooterSectionProps) {
                 </a>
               </div>
               <div className="flex items-center">
-                <span className="mr-3">Ì≥û</span>
+                <span className="mr-3">Tel:</span>
                 <a 
                   href={`tel:${contact.phone}`}
                   className="text-gray-300 hover:text-white transition-colors"
@@ -44,7 +44,7 @@ export default function FooterSection({ contact }: FooterSectionProps) {
                 </a>
               </div>
               <div className="flex items-start">
-                <span className="mr-3 mt-1">Ì≥ç</span>
+                <span className="mr-3 mt-1">Addr:</span>
                 <span className="text-gray-300">{contact.address}</span>
               </div>
             </div>
@@ -73,7 +73,7 @@ export default function FooterSection({ contact }: FooterSectionProps) {
                   rel="noopener noreferrer"
                   className="flex items-center text-gray-300 hover:text-white transition-colors"
                 >
-                  <span className="mr-3">{icon}</span>
+                  <span className="mr-3 font-mono">{icon}</span>
                   <span className="capitalize">{key}</span>
                 </a>
               ))}
@@ -84,7 +84,7 @@ export default function FooterSection({ contact }: FooterSectionProps) {
         {/* Bottom Section */}
         <div className="pt-8 border-t border-gray-800 text-center">
           <p className="text-gray-400">
-            ¬© {currentYear} Landing Builder. All rights reserved. Built with ‚ù§Ô∏è and modern web technologies.
+            ¬© {currentYear} Landing Builder. All rights reserved. Built with modern web technologies.
           </p>
         </div>
       </Container>

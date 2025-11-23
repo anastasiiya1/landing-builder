@@ -10,12 +10,12 @@ interface LiquidGlassSphereProps {
   scale?: number;
 }
 
-export default function LiquidGlassSphere({ 
-  position = [0, 0, 0], 
-  scale = 1 
+export default function LiquidGlassSphere({
+  position = [0, 0, 0],
+  scale = 1
 }: LiquidGlassSphereProps) {
   const meshRef = useRef<THREE.Mesh>(null);
-  
+
   // Create glass material
   const glassMaterial = useMemo(() => {
     return new THREE.MeshPhysicalMaterial({
@@ -26,7 +26,6 @@ export default function LiquidGlassSphere({
       transparent: true,
       opacity: 0.8,
       reflectivity: 0.2,
-      refractionRatio: 0.985,
       ior: 1.4,
     });
   }, []);

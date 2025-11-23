@@ -6,14 +6,14 @@ import TestimonialsSection from '@/components/sections/TestimonialsSection';
 import FooterSection from '@/components/sections/FooterSection';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default async function LandingPage({ params }: PageProps) {
-  const { slug } = params;
-  
+  const { slug } = await params;
+
   // Fetch landing page data from Supabase
   const landingData = await getLanding(slug);
 
@@ -34,7 +34,7 @@ export default async function LandingPage({ params }: PageProps) {
 
 // Generate metadata dynamically for SEO
 export async function generateMetadata({ params }: PageProps) {
-  const { slug } = params;
+  const { slug } = await params;
   const landingData = await getLanding(slug);
 
   if (!landingData) {
