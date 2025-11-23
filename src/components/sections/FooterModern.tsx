@@ -1,0 +1,290 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useRef, useState } from "react";
+
+interface ContactInfo {
+  email: string;
+  phone: string;
+  address: string;
+  social: {
+    twitter?: string;
+    facebook?: string;
+    linkedin?: string;
+    instagram?: string;
+  };
+}
+
+interface FooterProps {
+  contact: ContactInfo;
+}
+
+export default function Footer({ contact }: FooterProps) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    comment: "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
+    // Handle form submission here
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  return (
+    <footer className="bg-black relative overflow-hidden py-20">
+      {/* Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-r from-violet-500/10 to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-l from-fuchsia-500/10 to-transparent rounded-full blur-3xl" />
+        {/* Decorative plant element */}
+        <div className="absolute bottom-0 left-8 opacity-10">
+          <svg
+            className="w-32 h-64 text-green-400"
+            fill="currentColor"
+            viewBox="0 0 100 200"
+          >
+            <path d="M50 200C50 200 30 180 30 150C30 120 40 100 50 100C60 100 70 120 70 150C70 180 50 200 50 200Z" />
+            <path d="M50 100C50 100 20 80 20 50C20 20 30 0 50 0C70 0 80 20 80 50C80 80 50 100 50 100Z" />
+            <ellipse
+              cx="25"
+              cy="40"
+              rx="8"
+              ry="15"
+              transform="rotate(-30 25 40)"
+            />
+            <ellipse
+              cx="75"
+              cy="40"
+              rx="8"
+              ry="15"
+              transform="rotate(30 75 40)"
+            />
+            <ellipse
+              cx="35"
+              cy="130"
+              rx="6"
+              ry="12"
+              transform="rotate(-45 35 130)"
+            />
+            <ellipse
+              cx="65"
+              cy="130"
+              rx="6"
+              ry="12"
+              transform="rotate(45 65 130)"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* Left Side - Contact Info */}
+          <motion.div
+            ref={ref}
+            initial={{ opacity: 0, x: -50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-8"
+          >
+            <div>
+              <h3 className="text-3xl font-bold text-white mb-4">
+                Let's Discuss
+                <br />
+                <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
+                  Your Project?
+                </span>
+              </h3>
+              <p className="text-gray-300 text-lg">Get in touch with us</p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-violet-500 to-purple-500 rounded-xl flex items-center justify-center">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+                <span className="text-gray-300">{contact.email}</span>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-fuchsia-500 rounded-xl flex items-center justify-center">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                    />
+                  </svg>
+                </div>
+                <span className="text-gray-300">{contact.phone}</span>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-fuchsia-500 to-pink-500 rounded-xl flex items-center justify-center">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                </div>
+                <span className="text-gray-300">{contact.address}</span>
+              </div>
+            </div>
+
+            {/* Social Media */}
+            <div className="flex space-x-4">
+              <a
+                href="#"
+                className="w-12 h-12 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.0956Z" />
+                </svg>
+              </a>
+              <a
+                href="#"
+                className="w-12 h-12 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                </svg>
+              </a>
+            </div>
+          </motion.div>
+
+          {/* Right Side - Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all duration-300"
+                />
+              </div>
+
+              <div>
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300"
+                />
+              </div>
+
+              <div>
+                <textarea
+                  name="comment"
+                  placeholder="Message"
+                  rows={4}
+                  value={formData.comment}
+                  onChange={handleChange}
+                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/50 focus:border-fuchsia-500/50 transition-all duration-300 resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full px-8 py-4 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white font-semibold rounded-2xl transition-all duration-300 hover:from-violet-500 hover:via-purple-500 hover:to-fuchsia-500 hover:scale-105 hover:shadow-xl hover:shadow-violet-500/25 focus:outline-none focus:ring-2 focus:ring-violet-500/50"
+              >
+                Send Message
+              </button>
+
+              <p className="text-sm text-gray-400 text-center">
+                By clicking the button, I agree to the processing of personal
+                data
+              </p>
+            </form>
+          </motion.div>
+        </div>
+
+        {/* Bottom Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="border-t border-white/10 pt-8 mt-16 text-center"
+        >
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <div className="w-8 h-8 bg-gradient-to-r from-violet-500 to-purple-500 rounded-lg flex items-center justify-center">
+              <svg
+                className="w-5 h-5 text-white"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 2L13.09 8.26L20 7L14 12L20 17L13.09 15.74L12 22L10.91 15.74L4 17L10 12L4 7L10.91 8.26L12 2Z" />
+              </svg>
+            </div>
+            <span className="text-xl font-bold text-white">GreenSpace</span>
+          </div>
+          <p className="text-gray-400">
+            &copy; 2024 GreenSpace. Все права защищены.
+          </p>
+        </motion.div>
+      </div>
+    </footer>
+  );
+}

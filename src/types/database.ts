@@ -1,15 +1,13 @@
 export interface Database {
   public: {
     Tables: {
-      landing_pages: {
+      landings: {
         Row: {
-          id: string;
+          id: number;
           slug: string;
           title: string;
-          subtitle: string;
-          description: string;
+          button_text: string;
           hero_image: string;
-          hero_video?: string;
           benefits: Array<{
             icon: string;
             title: string;
@@ -34,12 +32,14 @@ export interface Database {
               instagram?: string;
             };
           };
-          created_at: string;
-          updated_at: string;
+          liquid_glass_enabled: boolean;
         };
-        Insert: Omit<Database['public']['Tables']['landing_pages']['Row'], 'id' | 'created_at' | 'updated_at'>;
-        Update: Partial<Database['public']['Tables']['landing_pages']['Insert']>;
+        Insert: Omit<Database['public']['Tables']['landings']['Row'], 'id'>;
+        Update: Partial<Database['public']['Tables']['landings']['Insert']>;
       };
     };
   };
 }
+
+// Helper type for landing page data
+export type LandingPage = Database['public']['Tables']['landings']['Row'];

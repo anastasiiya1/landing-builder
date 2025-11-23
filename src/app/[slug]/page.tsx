@@ -1,9 +1,6 @@
-import { notFound } from 'next/navigation';
-import { getLanding } from '@/lib/supabase/getLanding';
-import HeroSection from '@/components/sections/HeroSection';
-import BenefitsSection from '@/components/sections/BenefitsSection';
-import TestimonialsSection from '@/components/sections/TestimonialsSection';
-import FooterSection from '@/components/sections/FooterSection';
+import { notFound } from "next/navigation";
+import { getLanding } from "@/lib/supabase/getLanding";
+import ClientLandingWrapper from "@/components/ClientLandingWrapper";
 
 interface PageProps {
   params: Promise<{
@@ -22,14 +19,7 @@ export default async function LandingPage({ params }: PageProps) {
     notFound();
   }
 
-  return (
-    <div className="min-h-screen">
-      <HeroSection data={landingData} />
-      <BenefitsSection benefits={landingData.benefits} />
-      <TestimonialsSection testimonials={landingData.testimonials} />
-      <FooterSection contact={landingData.contact} />
-    </div>
-  );
+  return <ClientLandingWrapper landingData={landingData} />;
 }
 
 // Generate metadata dynamically for SEO
@@ -39,22 +29,22 @@ export async function generateMetadata({ params }: PageProps) {
 
   if (!landingData) {
     return {
-      title: 'Page Not Found',
+      title: "Page Not Found",
     };
   }
 
   return {
     title: landingData.title,
-    description: landingData.description,
+    description: `Landing page for ${landingData.title}`,
     openGraph: {
       title: landingData.title,
-      description: landingData.description,
+      description: `Landing page for ${landingData.title}`,
       images: [landingData.hero_image],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: landingData.title,
-      description: landingData.description,
+      description: `Landing page for ${landingData.title}`,
       images: [landingData.hero_image],
     },
   };
