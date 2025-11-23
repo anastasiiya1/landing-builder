@@ -7,7 +7,6 @@ import CreateLandingModal from "@/components/CreateLandingModal";
 import { createClient } from "@supabase/supabase-js";
 import { FacebookPixel } from "@/lib/facebook-pixel";
 
-
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -320,9 +319,9 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
             >
               <button
                 onClick={() => {
-  FacebookPixel.trackLead({ button: "create-landing" });
-  setIsCreateModalOpen(true);
-}}
+                  FacebookPixel.trackLead({ button: "create-landing" });
+                  setIsCreateModalOpen(true);
+                }}
                 className="
                   group inline-flex items-center justify-center gap-3
                   px-8 py-4 
@@ -394,9 +393,11 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
                 <div className="pt-4">
                   <button
                     onClick={() => {
-  FacebookPixel.trackEvent("ViewGalleryClick", { button: "gallery" });
-  setIsGalleryOpen(true);
-}}
+                      FacebookPixel.trackEvent("ViewGalleryClick", {
+                        button: "gallery",
+                      });
+                      setIsGalleryOpen(true);
+                    }}
                     className="
                       w-full px-6 py-3 
                       bg-white/10 backdrop-blur-md 

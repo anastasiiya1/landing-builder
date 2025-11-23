@@ -4,17 +4,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-
-// Facebook Pixel type declaration
-declare global {
-  interface Window {
-    fbq?: (
-      action: string,
-      event: string,
-      parameters?: Record<string, any>
-    ) => void;
-  }
-}
+import { FacebookPixel } from "@/lib/facebook-pixel";
 
 interface ContactInfo {
   email: string;
@@ -46,7 +36,7 @@ export default function Footer({
     phone: "",
     comment: "",
   });
-  const [showToast, setShowToast] = useState(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,30 +47,10 @@ export default function Footer({
 
     try {
       // Facebook Pixel Lead event tracking
-      if (typeof window !== "undefined" && window.fbq) {
-        window.fbq("track", "Lead", {
-          content_name: "Contact Form Submission",
-          content_category: "Lead Generation",
-          value: 1,
-          currency: "USD",
-          lead_event_source: "website",
-          predicted_ltv: 100,
-        });
-
-        // Also track as a custom event
-        window.fbq("trackCustom", "ContactFormSubmit", {
-          form_name: "Footer Contact Form",
-          user_name: formData.name,
-          user_phone: formData.phone,
-          message_length: formData.comment.length,
-        });
-      }
+      FacebookPixel.trackLead({ button: "submit-form" });
 
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Show success toast
-      setShowToast(true);
 
       // Reset form
       setFormData({
