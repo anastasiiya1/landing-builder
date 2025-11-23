@@ -41,7 +41,7 @@ export async function POST() {
           role: 'CTO',
           company: 'InnovateNow',
           image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
-          content: 'Outstanding support and incredible features. It\'s exactly what we needed to scale our operations.',
+          content: 'Outstanding support and incredible features. It is exactly what we needed to scale our operations.',
           rating: 5
         }
       ],
