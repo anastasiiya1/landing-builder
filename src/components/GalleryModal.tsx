@@ -205,7 +205,10 @@ export default function GalleryModal({ isOpen, onClose }: GalleryModalProps) {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="group relative bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden hover:bg-white/10 hover:border-purple-400/30 transition-all duration-300"
+                      onClick={() => {
+                        window.open(`/${page.slug}`, "_blank");
+                      }}
+                      className="group relative bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden hover:bg-white/10 hover:border-purple-400/30 transition-all duration-300 cursor-pointer"
                       style={{
                         transition: "all 0.3s ease",
                       }}
@@ -237,11 +240,12 @@ export default function GalleryModal({ isOpen, onClose }: GalleryModalProps) {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
                         {/* Visit Button */}
-                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="absolute top-4 right-4 hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <a
                             href={`/${page.slug}`}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
                             className="px-3 py-1.5 bg-white/90 text-gray-900 text-sm font-medium rounded-lg hover:bg-white transition-colors duration-300 cursor-pointer"
                           >
                             Visit →
