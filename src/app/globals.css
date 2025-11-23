@@ -3,6 +3,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Default color palette - can be overridden dynamically */
+  --color-primary: #8b5cf6;
+  --color-secondary: #a855f7;
+  --color-accent: #ec4899;
+  --color-background: #000000;
 }
 
 @theme inline {
@@ -19,8 +25,142 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent horizontal overflow */
+* {
+  box-sizing: border-box;
+}
+
+/* Ensure full width sections */
+section,
+header,
+footer,
+main {
+  width: 100%;
+}
+
+/* Custom cursor styles for interactive elements */
+button,
+a,
+.cursor-pointer,
+[role="button"] {
+  cursor: pointer;
+}
+
+/* Smooth scrolling offset for fixed header */
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
+/* Custom scrollbar styles for modal */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  transition: background-color 0.3s ease;
+}
+
+.scrollbar-thin:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.scrollbar-thumb-white\/20::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.scrollbar-track-transparent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hover\:scrollbar-thumb-white\/30:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Dynamic color utility classes */
+.bg-dynamic-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-dynamic-secondary {
+  background-color: var(--color-secondary);
+}
+
+.bg-dynamic-accent {
+  background-color: var(--color-accent);
+}
+
+.text-dynamic-primary {
+  color: var(--color-primary);
+}
+
+.text-dynamic-secondary {
+  color: var(--color-secondary);
+}
+
+.text-dynamic-accent {
+  color: var(--color-accent);
+}
+
+.border-dynamic-primary {
+  border-color: var(--color-primary);
+}
+
+.border-dynamic-secondary {
+  border-color: var(--color-secondary);
+}
+
+.border-dynamic-accent {
+  border-color: var(--color-accent);
+}
+
+.from-dynamic-primary {
+  --tw-gradient-from: var(--color-primary) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(from var(--color-primary) r g b / 0)
+    var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-dynamic-secondary {
+  --tw-gradient-to: var(--color-secondary) var(--tw-gradient-to-position);
+}
+
+.via-dynamic-accent {
+  --tw-gradient-to: rgb(from var(--color-accent) r g b / 0)
+    var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from),
+    var(--color-accent) var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+
+.bg-dynamic-glow {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-10, rgba(168, 85, 247, 0.1)),
+    var(--color-secondary-10, rgba(147, 51, 234, 0.05))
+  );
 }

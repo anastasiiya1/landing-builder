@@ -40,32 +40,12 @@ const BenefitCard = ({
       "
     >
       {/* Number indicator with modern gradient */}
-      <div
-        className={`absolute top-6 right-6 w-12 h-12 rounded-full bg-gradient-to-r ${
-          index % 4 === 0
-            ? "from-violet-500 to-purple-500"
-            : index % 4 === 1
-            ? "from-purple-500 to-fuchsia-500"
-            : index % 4 === 2
-            ? "from-fuchsia-500 to-pink-500"
-            : "from-cyan-500 to-blue-500"
-        } flex items-center justify-center shadow-lg`}
-      >
+      <div className="absolute top-6 right-6 w-12 h-12 rounded-full bg-dynamic-primary flex items-center justify-center shadow-lg">
         <span className="text-white font-bold text-lg">{index + 1}</span>
       </div>
 
       {/* Subtle glow effect with modern colors */}
-      <div
-        className={`absolute inset-0 bg-gradient-to-br ${
-          index % 4 === 0
-            ? "from-violet-400/10 to-purple-400/5"
-            : index % 4 === 1
-            ? "from-purple-400/10 to-fuchsia-400/5"
-            : index % 4 === 2
-            ? "from-fuchsia-400/10 to-pink-400/5"
-            : "from-cyan-400/10 to-blue-400/5"
-        } opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-      />
+      <div className="absolute inset-0 bg-dynamic-glow opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
       <div className="relative">
         <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">
@@ -88,17 +68,7 @@ const BenefitCard = ({
       </div>
 
       {/* Bottom accent line with matching gradient */}
-      <div
-        className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${
-          index % 4 === 0
-            ? "from-violet-500 to-purple-500"
-            : index % 4 === 1
-            ? "from-purple-500 to-fuchsia-500"
-            : index % 4 === 2
-            ? "from-fuchsia-500 to-pink-500"
-            : "from-cyan-500 to-blue-500"
-        } opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-      />
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-dynamic-accent transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700" />
     </motion.div>
   );
 };
@@ -107,6 +77,8 @@ export default function Benefits({ benefits }: BenefitsProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [currentSlide, setCurrentSlide] = useState(0);
+  const sectionRef = useRef(null);
+  const sectionInView = useInView(sectionRef, { once: true, margin: "-50px" });
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % Math.min(benefits.length, 4));
@@ -120,11 +92,18 @@ export default function Benefits({ benefits }: BenefitsProps) {
   };
 
   return (
-    <section className="py-20 bg-black relative overflow-hidden">
+    <motion.section
+      ref={sectionRef}
+      initial={{ opacity: 0, x: -100 }}
+      animate={sectionInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      id="benefits"
+      className="py-20 bg-black relative overflow-hidden"
+    >
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-l from-violet-500/10 to-transparent rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-r from-fuchsia-500/10 to-transparent rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-dynamic-glow rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-dynamic-glow rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -136,9 +115,9 @@ export default function Benefits({ benefits }: BenefitsProps) {
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-            4 Reasons Why It's Convenient
+            4 Reasons Why It&apos;s Convenient
             <br />
-            <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+            <span className="text-dynamic-accent">
               & Reliable to Work With Us
             </span>
           </h2>
@@ -174,7 +153,7 @@ export default function Benefits({ benefits }: BenefitsProps) {
           <div className="flex items-center justify-center mt-8 space-x-4">
             <button
               onClick={prevSlide}
-              className="p-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-full text-white hover:bg-white/10 transition-all duration-300"
+              className="p-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-full text-white hover:bg-white/10 transition-all duration-300 cursor-pointer"
             >
               <svg
                 className="w-5 h-5"
@@ -200,7 +179,7 @@ export default function Benefits({ benefits }: BenefitsProps) {
                     onClick={() => setCurrentSlide(index)}
                     className={`w-3 h-3 rounded-full transition-all duration-300 ${
                       index === currentSlide
-                        ? "bg-gradient-to-r from-violet-500 to-purple-500"
+                        ? "bg-dynamic-accent"
                         : "bg-white/20"
                     }`}
                   />
@@ -210,7 +189,7 @@ export default function Benefits({ benefits }: BenefitsProps) {
 
             <button
               onClick={nextSlide}
-              className="p-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-full text-white hover:bg-white/10 transition-all duration-300"
+              className="p-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-full text-white hover:bg-white/10 transition-all duration-300 cursor-pointer"
             >
               <svg
                 className="w-5 h-5"
@@ -229,6 +208,6 @@ export default function Benefits({ benefits }: BenefitsProps) {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

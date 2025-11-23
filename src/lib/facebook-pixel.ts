@@ -13,7 +13,7 @@ export class FacebookPixel {
     if (typeof window === 'undefined' || this.initialized) return;
 
     // Mock Facebook Pixel initialization
-    console.log('🔵 Facebook Pixel initialized with ID:', this.pixelId);
+    console.log('Facebook Pixel initialized with ID:', this.pixelId);
     
     // In production, you would load the actual Facebook Pixel script here
     // This is a mock implementation for demonstration
@@ -25,7 +25,7 @@ export class FacebookPixel {
   static trackEvent(eventName: string, parameters?: FacebookPixelParameters) {
     if (typeof window === 'undefined') return;
 
-    console.log('📊 Facebook Pixel Event:', eventName, parameters);
+    console.log('Facebook Pixel Event:', eventName, parameters);
     
     // Mock tracking - in production this would use the real fbq function
     const windowWithFbq = window as WindowWithFbq;
@@ -49,7 +49,7 @@ export class FacebookPixel {
   // Mock fbq function for demonstration
   private static mockFbq(action: string, eventName: string, parameters?: FacebookPixelParameters) {
     const timestamp = new Date().toISOString();
-    console.log(`🎯 [${timestamp}] FB Pixel - ${action}: ${eventName}`, parameters || '');
+    console.log(`[${timestamp}] FB Pixel - ${action}: ${eventName}`, parameters || '');
     
     // Show a visual notification in development
     if (action === 'track' && eventName === 'Lead') {
@@ -69,7 +69,7 @@ export class FacebookPixel {
           font-size: 14px;
           animation: slideIn 0.3s ease-out;
         ">
-          🎯 Facebook Pixel: Lead Event Tracked!
+          Facebook Pixel: Lead Event Tracked!
         </div>
         <style>
           @keyframes slideIn {

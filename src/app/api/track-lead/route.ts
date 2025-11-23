@@ -5,16 +5,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, phone, landingPage, source } = body;
 
-    // Basic validation
     if (!email && !phone) {
       return NextResponse.json(
         { message: 'Either email or phone is required' },
         { status: 400 }
       );
     }
-
-    // In a real application, you would save this to your database
-    // For demo purposes, we'll just log it and return success
+    
     const leadData = {
       email,
       phone,

@@ -18,6 +18,7 @@ interface Testimonial {
 
 interface TestimonialsProps {
   testimonials: Testimonial[];
+  companyName?: string;
 }
 
 const StarRating = ({
@@ -177,16 +178,142 @@ const TestimonialCard = ({
   );
 };
 
-export default function Testimonials({ testimonials }: TestimonialsProps) {
+export default function Testimonials({
+  testimonials,
+  companyName = "LandingBuilder",
+}: TestimonialsProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const sectionRef = useRef(null);
+  const sectionInView = useInView(sectionRef, { once: true, margin: "-50px" });
 
   return (
-    <section className="py-20 bg-black relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-0 w-96 h-96 bg-gradient-to-r from-purple-500/10 to-transparent rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-gradient-to-l from-cyan-500/10 to-transparent rounded-full blur-3xl animate-pulse delay-1000" />
+    <motion.section
+      ref={sectionRef}
+      initial={{ opacity: 0, y: 100 }}
+      animate={sectionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 100 }}
+      transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+      id="testimonials"
+      className="py-20 bg-black relative overflow-hidden"
+    >
+      {/* 3D Purple Warning Tape - Bottom Left to Top Right */}
+      <div
+        className="absolute overflow-hidden pointer-events-none"
+        style={{
+          left: "50%",
+          top: "0",
+          width: "100vw",
+          height: "100%",
+          transform: "translateX(-50%)",
+        }}
+      >
+        {/* Main 3D Warning Tape */}
+        <div
+          className="absolute"
+          style={{
+            width: "200vw",
+            height: "120px",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%) rotate(45deg)",
+            transformStyle: "preserve-3d",
+          }}
+        >
+          {/* 3D Tape with depth layers */}
+          <motion.div
+            className="relative w-full h-full"
+            animate={{
+              rotateX: [0, 2, 0, -2, 0],
+              rotateY: [0, 1, 0, -1, 0],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            style={{
+              transformStyle: "preserve-3d",
+            }}
+          >
+            {/* Main tape surface */}
+            <div className="absolute inset-0 bg-gradient-to-b from-purple-600/25 via-violet-600/30 to-purple-700/25 border-t-4 border-b-4 border-purple-500/40 shadow-2xl">
+              {/* 3D highlight on top */}
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              {/* 3D shadow on bottom */}
+              <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-transparent via-black/30 to-transparent" />
+            </div>
+
+            {/* Depth layer 1 */}
+            <div
+              className="absolute inset-0 bg-gradient-to-b from-purple-800/20 to-purple-900/20 border-t-2 border-b-2 border-purple-600/30"
+              style={{ transform: "translateZ(-5px)" }}
+            />
+
+            {/* Depth layer 2 */}
+            <div
+              className="absolute inset-0 bg-gradient-to-b from-purple-900/15 to-black/20 border-t border-b border-purple-700/20"
+              style={{ transform: "translateZ(-10px)" }}
+            />
+
+            {/* Scrolling text container */}
+            <div className="absolute inset-0 flex items-center overflow-hidden">
+              <motion.div
+                className="flex items-center space-x-20 whitespace-nowrap"
+                initial={{ x: 0 }}
+                animate={{
+                  x: [0, "-50%"],
+                }}
+                transition={{
+                  duration: 30,
+                  repeat: Infinity,
+                  ease: "linear",
+                  repeatType: "loop",
+                }}
+                style={{
+                  width: "200%",
+                }}
+              >
+                {/* First set of text */}
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div
+                    key={`first-${i}`}
+                    className="flex items-center space-x-20"
+                  >
+                    <span className="text-2xl font-bold text-white/80 tracking-wider drop-shadow-lg">
+                      {companyName}
+                    </span>
+                    <div className="w-4 h-4 bg-dynamic-accent/70 rotate-45 shadow-lg" />
+                    <span className="text-2xl font-bold text-white/80 tracking-wider drop-shadow-lg">
+                      Create Your Landing
+                    </span>
+                    <div className="w-3 h-3 bg-dynamic-secondary/70 rounded-full shadow-lg" />
+                  </div>
+                ))}
+                {/* Duplicate set for seamless loop */}
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div
+                    key={`second-${i}`}
+                    className="flex items-center space-x-20"
+                  >
+                    <span className="text-2xl font-bold text-white/80 tracking-wider drop-shadow-lg">
+                      {companyName}
+                    </span>
+                    <div className="w-4 h-4 bg-dynamic-accent/70 rotate-45 shadow-lg" />
+                    <span className="text-2xl font-bold text-white/80 tracking-wider drop-shadow-lg">
+                      Create Your Landing
+                    </span>
+                    <div className="w-3 h-3 bg-dynamic-secondary/70 rounded-full shadow-lg" />
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Ambient lighting effects */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-violet-500/5" />
+        <div className="absolute top-1/4 left-0 w-96 h-96 bg-gradient-to-r from-purple-500/8 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-gradient-to-l from-violet-500/8 to-transparent rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -215,6 +342,6 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -50,9 +50,39 @@ export default function GalleryModal({ isOpen, onClose }: GalleryModalProps) {
 
   useEffect(() => {
     if (isOpen) {
+      const scrollY = window.scrollY;
+
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
+
+      return () => {
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
       fetchLandingPages();
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscapeKey);
+    return () => document.removeEventListener("keydown", handleEscapeKey);
+  }, [isOpen, onClose]);
 
   const getImageWithFallback = (imageUrl: string) => {
     return (
@@ -87,10 +117,21 @@ export default function GalleryModal({ isOpen, onClose }: GalleryModalProps) {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed inset-4 md:inset-8 lg:inset-16 bg-gray-900/95 backdrop-blur-md rounded-3xl border border-white/10 z-50 overflow-hidden"
+            className="fixed inset-4 md:inset-8 lg:inset-16 bg-black/95 backdrop-blur-md rounded-3xl border border-purple-500/20 z-50 flex flex-col max-h-[calc(100vh-2rem)] md:max-h-[calc(100vh-4rem)] lg:max-h-[calc(100vh-8rem)]"
+            style={{
+              boxShadow: `
+                0 0 0 1px rgba(168, 85, 247, 0.1),
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 0 30px rgba(147, 51, 234, 0.25),
+                0 0 60px rgba(168, 85, 247, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1)
+              `,
+            }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-white/10">
+            <div className="flex items-center justify-between p-6 border-b border-white/10 flex-shrink-0">
               <div>
                 <h2 className="text-2xl font-bold text-white">
                   Landing Pages Gallery
@@ -101,7 +142,7 @@ export default function GalleryModal({ isOpen, onClose }: GalleryModalProps) {
               </div>
               <button
                 onClick={onClose}
-                className="p-2 text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-300"
+                className="p-2 text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-300 cursor-pointer"
               >
                 <svg
                   className="w-6 h-6"
@@ -120,7 +161,7 @@ export default function GalleryModal({ isOpen, onClose }: GalleryModalProps) {
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent hover:scrollbar-thumb-white/30">
               {loading && (
                 <div className="flex items-center justify-center h-64">
                   <div className="flex items-center space-x-2 text-gray-400">
@@ -136,7 +177,7 @@ export default function GalleryModal({ isOpen, onClose }: GalleryModalProps) {
                     <div className="text-red-400 mb-2">⚠️ {error}</div>
                     <button
                       onClick={fetchLandingPages}
-                      className="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors duration-300"
+                      className="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors duration-300 cursor-pointer"
                     >
                       Try Again
                     </button>
@@ -164,7 +205,22 @@ export default function GalleryModal({ isOpen, onClose }: GalleryModalProps) {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="group relative bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                      className="group relative bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden hover:bg-white/10 hover:border-purple-400/30 transition-all duration-300"
+                      style={{
+                        transition: "all 0.3s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.boxShadow = `
+                          0 0 0 1px rgba(168, 85, 247, 0.2),
+                          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                          0 0 20px rgba(147, 51, 234, 0.2),
+                          0 0 40px rgba(168, 85, 247, 0.1)
+                        `;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.boxShadow = "none";
+                      }}
                     >
                       {/* Image */}
                       <div className="aspect-video relative overflow-hidden">
@@ -186,7 +242,7 @@ export default function GalleryModal({ isOpen, onClose }: GalleryModalProps) {
                             href={`/${page.slug}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-3 py-1.5 bg-white/90 text-gray-900 text-sm font-medium rounded-lg hover:bg-white transition-colors duration-300"
+                            className="px-3 py-1.5 bg-white/90 text-gray-900 text-sm font-medium rounded-lg hover:bg-white transition-colors duration-300 cursor-pointer"
                           >
                             Visit →
                           </a>

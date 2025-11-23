@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { Sphere } from '@react-three/drei';
-import * as THREE from 'three';
+import { useRef, useMemo } from "react";
+import { useFrame } from "@react-three/fiber";
+import { Sphere } from "@react-three/drei";
+import * as THREE from "three";
 
 interface LiquidGlassSphereProps {
   position?: [number, number, number];
@@ -12,7 +12,7 @@ interface LiquidGlassSphereProps {
 
 export default function LiquidGlassSphere({
   position = [0, 0, 0],
-  scale = 1
+  scale = 1,
 }: LiquidGlassSphereProps) {
   const meshRef = useRef<THREE.Mesh>(null);
 
@@ -33,9 +33,11 @@ export default function LiquidGlassSphere({
   // Animation
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
+      meshRef.current.rotation.x =
+        Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
       meshRef.current.rotation.y += 0.01;
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.8) * 0.1;
+      meshRef.current.position.y =
+        position[1] + Math.sin(state.clock.elapsedTime * 0.8) * 0.1;
     }
   });
 

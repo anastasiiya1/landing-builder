@@ -21,6 +21,39 @@ export default function ClientLandingWrapper({
     FacebookPixel.trackPageView(landingData.slug);
   }, [landingData.slug]);
 
+  // Apply dynamic color palette to CSS variables
+  useEffect(() => {
+    if (landingData.color_palette) {
+      const root = document.documentElement;
+      root.style.setProperty(
+        "--color-primary",
+        landingData.color_palette.primary
+      );
+      root.style.setProperty(
+        "--color-secondary",
+        landingData.color_palette.secondary
+      );
+      root.style.setProperty(
+        "--color-accent",
+        landingData.color_palette.accent
+      );
+      root.style.setProperty(
+        "--color-background",
+        landingData.color_palette.background
+      );
+
+      // Set glow colors with opacity for hover effects
+      root.style.setProperty(
+        "--color-primary-10",
+        landingData.color_palette.primary + "1A"
+      );
+      root.style.setProperty(
+        "--color-secondary-10",
+        landingData.color_palette.secondary + "0D"
+      );
+    }
+  }, [landingData.color_palette]);
+
   const handleHeroButtonClick = () => {
     FacebookPixel.trackLead({
       slug: landingData.slug,
@@ -29,12 +62,12 @@ export default function ClientLandingWrapper({
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black w-full">
       {/* Fixed Header */}
-      <Header logo="GreenSpace" />
+      <Header logo={landingData.company_name || "LandingBuilder"} />
 
       {/* Main Content */}
-      <main>
+      <main className="w-full">
         {/* Hero Section */}
         <Hero
           title={landingData.title}
@@ -47,11 +80,17 @@ export default function ClientLandingWrapper({
         <Benefits benefits={landingData.benefits} />
 
         {/* Testimonials Section */}
-        <Testimonials testimonials={landingData.testimonials} />
+        <Testimonials
+          testimonials={landingData.testimonials}
+          companyName={landingData.company_name || "LandingBuilder"}
+        />
       </main>
 
       {/* Footer with Contact Form */}
-      <FooterModern contact={landingData.contact} />
+      <FooterModern
+        contact={landingData.contact}
+        companyName={landingData.company_name || "LandingBuilder"}
+      />
     </div>
   );
 }

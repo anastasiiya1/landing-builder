@@ -10,11 +10,8 @@ interface PageProps {
 
 export default async function LandingPage({ params }: PageProps) {
   const { slug } = await params;
-
-  // Fetch landing page data from Supabase
   const landingData = await getLanding(slug);
 
-  // Show 404 if no data found
   if (!landingData) {
     notFound();
   }
@@ -22,7 +19,6 @@ export default async function LandingPage({ params }: PageProps) {
   return <ClientLandingWrapper landingData={landingData} />;
 }
 
-// Generate metadata dynamically for SEO
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const landingData = await getLanding(slug);
@@ -50,9 +46,6 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-// Optional: Generate static params for known slugs
 export async function generateStaticParams() {
-  // In a real application, you might want to fetch all slugs from the database
-  // For now, return an empty array to use ISR (Incremental Static Regeneration)
   return [];
 }

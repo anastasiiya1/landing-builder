@@ -32,7 +32,16 @@ export interface Database {
               instagram?: string;
             };
           };
+          color_palette: {
+            primary: string;
+            secondary: string;
+            accent: string;
+            background: string;
+          };
+          company_name: string;
           liquid_glass_enabled: boolean;
+          created_at: string;
+          updated_at: string;
         };
         Insert: Omit<Database['public']['Tables']['landings']['Row'], 'id'>;
         Update: Partial<Database['public']['Tables']['landings']['Insert']>;
@@ -41,5 +50,4 @@ export interface Database {
   };
 }
 
-// Helper type for landing page data
 export type LandingPage = Database['public']['Tables']['landings']['Row'];

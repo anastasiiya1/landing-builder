@@ -18,11 +18,17 @@ interface ContactInfo {
 
 interface FooterProps {
   contact: ContactInfo;
+  companyName?: string;
 }
 
-export default function Footer({ contact }: FooterProps) {
+export default function Footer({
+  contact,
+  companyName = "LandingBuilder",
+}: FooterProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const sectionRef = useRef(null);
+  const sectionInView = useInView(sectionRef, { once: true, margin: "-50px" });
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -45,50 +51,18 @@ export default function Footer({ contact }: FooterProps) {
   };
 
   return (
-    <footer className="bg-black relative overflow-hidden py-20">
+    <motion.footer
+      ref={sectionRef}
+      initial={{ opacity: 0, x: 100 }}
+      animate={sectionInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 100 }}
+      transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+      id="contact"
+      className="bg-black relative overflow-hidden py-20"
+    >
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-r from-violet-500/10 to-transparent rounded-full blur-3xl" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-l from-fuchsia-500/10 to-transparent rounded-full blur-3xl" />
-        {/* Decorative plant element */}
-        <div className="absolute bottom-0 left-8 opacity-10">
-          <svg
-            className="w-32 h-64 text-green-400"
-            fill="currentColor"
-            viewBox="0 0 100 200"
-          >
-            <path d="M50 200C50 200 30 180 30 150C30 120 40 100 50 100C60 100 70 120 70 150C70 180 50 200 50 200Z" />
-            <path d="M50 100C50 100 20 80 20 50C20 20 30 0 50 0C70 0 80 20 80 50C80 80 50 100 50 100Z" />
-            <ellipse
-              cx="25"
-              cy="40"
-              rx="8"
-              ry="15"
-              transform="rotate(-30 25 40)"
-            />
-            <ellipse
-              cx="75"
-              cy="40"
-              rx="8"
-              ry="15"
-              transform="rotate(30 75 40)"
-            />
-            <ellipse
-              cx="35"
-              cy="130"
-              rx="6"
-              ry="12"
-              transform="rotate(-45 35 130)"
-            />
-            <ellipse
-              cx="65"
-              cy="130"
-              rx="6"
-              ry="12"
-              transform="rotate(45 65 130)"
-            />
-          </svg>
-        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -103,7 +77,7 @@ export default function Footer({ contact }: FooterProps) {
           >
             <div>
               <h3 className="text-3xl font-bold text-white mb-4">
-                Let's Discuss
+                Let&apos;s Discuss
                 <br />
                 <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
                   Your Project?
@@ -248,7 +222,7 @@ export default function Footer({ contact }: FooterProps) {
 
               <button
                 type="submit"
-                className="w-full px-8 py-4 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white font-semibold rounded-2xl transition-all duration-300 hover:from-violet-500 hover:via-purple-500 hover:to-fuchsia-500 hover:scale-105 hover:shadow-xl hover:shadow-violet-500/25 focus:outline-none focus:ring-2 focus:ring-violet-500/50"
+                className="w-full px-8 py-4 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white font-semibold rounded-2xl transition-all duration-300 hover:from-violet-500 hover:via-purple-500 hover:to-fuchsia-500 hover:scale-105 hover:shadow-xl hover:shadow-violet-500/25 focus:outline-none focus:ring-2 focus:ring-violet-500/50 cursor-pointer"
               >
                 Send Message
               </button>
@@ -278,13 +252,13 @@ export default function Footer({ contact }: FooterProps) {
                 <path d="M12 2L13.09 8.26L20 7L14 12L20 17L13.09 15.74L12 22L10.91 15.74L4 17L10 12L4 7L10.91 8.26L12 2Z" />
               </svg>
             </div>
-            <span className="text-xl font-bold text-white">GreenSpace</span>
+            <span className="text-xl font-bold text-white">{companyName}</span>
           </div>
           <p className="text-gray-400">
-            &copy; 2024 GreenSpace. Все права защищены.
+            &copy; 2025 {companyName}. All rights reserved.
           </p>
         </motion.div>
       </div>
-    </footer>
+    </motion.footer>
   );
 }

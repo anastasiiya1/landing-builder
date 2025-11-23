@@ -13,11 +13,17 @@ export default function Header({ logo = "GreenSpace" }: HeaderProps) {
   const navItems = [
     { label: "About", href: "#about" },
     { label: "Why Us", href: "#benefits" },
+    { label: "Reviews", href: "#testimonials" },
     { label: "Contact", href: "#contact" },
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+    <motion.header
+      initial={{ opacity: 0, y: -100 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -26,7 +32,7 @@ export default function Header({ logo = "GreenSpace" }: HeaderProps) {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center space-x-2"
           >
-            <div className="w-8 h-8 bg-gradient-to-r from-violet-500 to-purple-500 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-dynamic-primary rounded-lg flex items-center justify-center">
               <svg
                 className="w-5 h-5 text-white"
                 fill="currentColor"
@@ -47,10 +53,20 @@ export default function Header({ logo = "GreenSpace" }: HeaderProps) {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-gray-300 hover:text-white transition-colors duration-300 relative group"
+                className="text-gray-300 hover:text-white transition-colors duration-300 relative group cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const target = document.querySelector(item.href);
+                  if (target) {
+                    target.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }
+                }}
               >
                 {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-violet-500 to-purple-500 group-hover:w-full transition-all duration-300" />
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-dynamic-accent group-hover:w-full transition-all duration-300" />
               </motion.a>
             ))}
           </nav>
@@ -100,7 +116,7 @@ export default function Header({ logo = "GreenSpace" }: HeaderProps) {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-gray-300 hover:text-white transition-colors duration-300"
+            className="md:hidden p-2 text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
           >
             <svg
               className="w-6 h-6"
@@ -143,8 +159,19 @@ export default function Header({ logo = "GreenSpace" }: HeaderProps) {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block text-gray-300 hover:text-white transition-colors duration-300 py-2"
+                  className="block text-gray-300 hover:text-white transition-colors duration-300 py-2 cursor-pointer"
+                  // eslint-disable-next-line react/jsx-no-duplicate-props
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const target = document.querySelector(item.href);
+                    if (target) {
+                      target.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }
+                    setIsMenuOpen(false);
+                  }}
                 >
                   {item.label}
                 </motion.a>
@@ -174,7 +201,7 @@ export default function Header({ logo = "GreenSpace" }: HeaderProps) {
                   <span className="text-sm">New York</span>
                 </div>
 
-                <button className="p-2 text-gray-300 hover:text-white transition-colors duration-300">
+                <button className="p-2 text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer">
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -194,6 +221,6 @@ export default function Header({ logo = "GreenSpace" }: HeaderProps) {
           )}
         </AnimatePresence>
       </div>
-    </header>
+    </motion.header>
   );
 }

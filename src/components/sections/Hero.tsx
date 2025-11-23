@@ -1,8 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GalleryModal from "@/components/GalleryModal";
+import CreateLandingModal from "@/components/CreateLandingModal";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 interface HeroProps {
   title: string;
@@ -13,16 +20,167 @@ interface HeroProps {
 
 export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
-  return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black pt-16">
-      {/* Modern Abstract Background */}
-      <div className="absolute inset-0 z-0">
-        {/* Animated gradient orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-violet-600/20 to-purple-600/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-l from-fuchsia-600/20 to-pink-600/20 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-transparent via-cyan-600/5 to-transparent" />
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [landingCount, setLandingCount] = useState(0);
 
-        {/* Grid pattern overlay */}
+  const fetchLandingCount = async () => {
+    try {
+      const { count, error } = await supabase
+        .from("landings")
+        .select("*", { count: "exact", head: true });
+
+      if (error) {
+        console.error("Error fetching landing count:", error);
+      } else {
+        setLandingCount(count || 0);
+      }
+    } catch (error) {
+      console.error("Error fetching landing count:", error);
+    }
+  };
+
+  useEffect(() => {
+    const loadLandingCount = async () => {
+      await fetchLandingCount();
+    };
+    loadLandingCount();
+  }, []);
+  return (
+    <section
+      id="about"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black pt-16"
+    >
+      {/* 3D Color Explosion Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        {/* Main explosion center */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          {/* Rotating color rings */}
+          <motion.div
+            animate={{
+              rotate: 360,
+              scale: [1, 1.2, 1, 0.8, 1],
+            }}
+            transition={{
+              rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+              scale: { duration: 8, repeat: Infinity, ease: "easeInOut" },
+            }}
+            className="w-[800px] h-[800px] rounded-full border-4 border-dynamic-accent/10"
+          />
+
+          <motion.div
+            animate={{
+              rotate: -360,
+              scale: [0.8, 1, 1.1, 1, 0.8],
+            }}
+            transition={{
+              rotate: { duration: 25, repeat: Infinity, ease: "linear" },
+              scale: { duration: 6, repeat: Infinity, ease: "easeInOut" },
+            }}
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border-4 border-dynamic-secondary/10"
+          />
+
+          <motion.div
+            animate={{
+              rotate: 360,
+              scale: [1, 0.7, 1.3, 1],
+            }}
+            transition={{
+              rotate: { duration: 15, repeat: Infinity, ease: "linear" },
+              scale: { duration: 10, repeat: Infinity, ease: "easeInOut" },
+            }}
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border-4 border-cyan-500/15"
+          />
+        </div>
+
+        {/* Floating color particles */}
+        {Array.from({ length: 12 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className={`absolute w-4 h-4 rounded-full ${
+              i % 3 === 0
+                ? "bg-dynamic-primary/40"
+                : i % 3 === 1
+                ? "bg-dynamic-secondary/40"
+                : "bg-dynamic-accent/40"
+            } blur-sm`}
+            style={{
+              left: `${20 + ((i * 60) % 60)}%`,
+              top: `${15 + ((i * 70) % 70)}%`,
+            }}
+            animate={{
+              x: [0, Math.cos(i * 0.5) * 100, 0],
+              y: [0, Math.sin(i * 0.7) * 100, 0],
+              scale: [0.5, 1.5, 0.5],
+              opacity: [0.2, 0.8, 0.2],
+            }}
+            transition={{
+              duration: 8 + i * 0.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.3,
+            }}
+          />
+        ))}
+
+        {/* Large floating orbs with 3D effect */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, rgba(168, 85, 247, 0.2) 50%, transparent 100%)",
+          }}
+          animate={{
+            scale: [1, 1.3, 0.8, 1],
+            x: [0, 50, -30, 0],
+            y: [0, -40, 30, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, rgba(219, 39, 119, 0.2) 50%, transparent 100%)",
+          }}
+          animate={{
+            scale: [0.8, 1.2, 1, 0.9, 0.8],
+            x: [0, -60, 40, 0],
+            y: [0, 50, -20, 0],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+        />
+
+        <motion.div
+          className="absolute top-1/3 right-1/3 w-64 h-64 rounded-full blur-2xl"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, rgba(14, 165, 233, 0.2) 50%, transparent 100%)",
+          }}
+          animate={{
+            scale: [1, 0.7, 1.4, 1],
+            x: [0, 80, -50, 0],
+            y: [0, -60, 40, 0],
+            rotate: [0, 180, 360],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 4,
+          }}
+        />
+
+        {/* Subtle grid pattern overlay */}
         <div className="absolute inset-0 opacity-5">
           <div
             className="w-full h-full"
@@ -32,18 +190,42 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
             }}
           />
         </div>
+
+        {/* Dynamic color waves */}
+        <motion.div
+          className="absolute inset-0"
+          animate={{
+            background: [
+              "radial-gradient(ellipse at 20% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)",
+              "radial-gradient(ellipse at 80% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%)",
+              "radial-gradient(ellipse at 50% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%)",
+              "radial-gradient(ellipse at 30% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%)",
+            ],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
       </div>
 
       {/* Content Container with Glass Effect */}
-      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Botanical Card Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Left Side - Main Content */}
           <div className="text-left space-y-8">
             <motion.h1
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                duration: 1,
+                ease: "easeOut",
+                type: "spring",
+                stiffness: 100,
+                damping: 20,
+              }}
               className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight text-white"
               style={{
                 textShadow: "0 2px 4px rgba(0,0,0,0.8)",
@@ -53,9 +235,15 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+              initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{
+                duration: 0.8,
+                delay: 0.3,
+                ease: "easeOut",
+                type: "spring",
+                stiffness: 80,
+              }}
               className="text-lg sm:text-xl text-gray-200 leading-relaxed max-w-xl"
             >
               Experience premium solutions designed for modern businesses that
@@ -69,19 +257,19 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
               className="pt-4"
             >
               <button
-                onClick={onButtonClick}
+                onClick={() => setIsCreateModalOpen(true)}
                 className="
                   group inline-flex items-center justify-center gap-3
                   px-8 py-4 
                   text-lg font-semibold 
-                  text-white bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600
+                  text-white bg-dynamic-primary
                   backdrop-blur-md
-                  border border-violet-500/30
                   rounded-2xl
                   transition-all duration-300 ease-in-out
-                  hover:from-violet-500 hover:via-purple-500 hover:to-fuchsia-500 hover:scale-105 hover:shadow-xl hover:shadow-violet-500/30
+                  hover:bg-dynamic-secondary hover:scale-105 hover:shadow-xl hover:shadow-dynamic-accent/30
                   active:scale-95
-                  focus:outline-none focus:ring-2 focus:ring-violet-500/50
+                  focus:outline-none focus:ring-2 focus:ring-dynamic-accent/50
+                  cursor-pointer
                 "
               >
                 {buttonText}
@@ -110,19 +298,6 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
             className="relative"
           >
             <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl">
-              {/* Decorative elements */}
-              <div className="absolute top-6 right-6 w-20 h-20 opacity-20">
-                <svg
-                  viewBox="0 0 100 100"
-                  className="w-full h-full text-green-400"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M50,10 C30,10 10,30 10,50 C10,70 30,90 50,90 C70,90 90,70 90,50 C90,30 70,10 50,10 Z M50,20 L60,35 L75,35 L63,47 L68,62 L50,52 L32,62 L37,47 L25,35 L40,35 Z"
-                  />
-                </svg>
-              </div>
-
               <div className="relative space-y-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-white mb-2">
@@ -135,7 +310,7 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
 
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div className="p-4">
-                    <div className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
+                    <div className="text-2xl font-bold text-dynamic-accent">
                       10+
                     </div>
                     <div className="text-sm text-gray-300">
@@ -143,11 +318,11 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
                     </div>
                   </div>
                   <div className="p-4">
-                    <div className="text-2xl font-bold bg-gradient-to-r from-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
-                      500+
+                    <div className="text-2xl font-bold text-dynamic-accent">
+                      {landingCount}+
                     </div>
                     <div className="text-sm text-gray-300">
-                      Projects Completed
+                      Landings Created
                     </div>
                   </div>
                 </div>
@@ -159,11 +334,12 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
                     className="
                       w-full px-6 py-3 
                       bg-white/10 backdrop-blur-md 
-                      border border-white/20 
+                    
                       rounded-xl text-white text-sm font-medium
                       hover:bg-white/20 hover:scale-105 
                       transition-all duration-300
                       group flex items-center justify-center gap-2
+                      cursor-pointer
                     "
                   >
                     <svg
@@ -225,6 +401,15 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
       <GalleryModal
         isOpen={isGalleryOpen}
         onClose={() => setIsGalleryOpen(false)}
+      />
+
+      <CreateLandingModal
+        isOpen={isCreateModalOpen}
+        onClose={() => {
+          setIsCreateModalOpen(false);
+          // Refresh landing count after creating a new landing
+          fetchLandingCount();
+        }}
       />
     </section>
   );
