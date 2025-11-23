@@ -1,8 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+
+// Facebook Pixel type declaration
+declare global {
+  interface Window {
+    fbq?: (
+      action: string,
+      event: string,
+      parameters?: Record<string, any>
+    ) => void;
+  }
+}
 
 interface ContactInfo {
   email: string;
@@ -34,11 +46,53 @@ export default function Footer({
     phone: "",
     comment: "",
   });
+  const [showToast, setShowToast] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Handle form submission here
+
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    try {
+      // Facebook Pixel Lead event tracking
+      if (typeof window !== "undefined" && window.fbq) {
+        window.fbq("track", "Lead", {
+          content_name: "Contact Form Submission",
+          content_category: "Lead Generation",
+          value: 1,
+          currency: "USD",
+          lead_event_source: "website",
+          predicted_ltv: 100,
+        });
+
+        // Also track as a custom event
+        window.fbq("trackCustom", "ContactFormSubmit", {
+          form_name: "Footer Contact Form",
+          user_name: formData.name,
+          user_phone: formData.phone,
+          message_length: formData.comment.length,
+        });
+      }
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Show success toast
+      setShowToast(true);
+
+      // Reset form
+      setFormData({
+        name: "",
+        phone: "",
+        comment: "",
+      });
+    } catch (error) {
+      console.error("Form submission error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -61,8 +115,196 @@ export default function Footer({
     >
       {/* Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-r from-violet-500/10 to-transparent rounded-full blur-3xl" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-l from-fuchsia-500/10 to-transparent rounded-full blur-3xl" />
+        {/* Soft Flowing Waves */}
+        {Array.from({ length: 5 }).map((_, i) => (
+          <motion.div
+            key={`footer-wave-${i}`}
+            className={`absolute rounded-full blur-2xl ${
+              [
+                "bg-gradient-to-r from-purple-500/15 via-purple-400/20 to-purple-500/15",
+                "bg-gradient-to-r from-cyan-500/15 via-cyan-400/20 to-cyan-500/15",
+                "bg-gradient-to-r from-fuchsia-500/15 via-fuchsia-400/20 to-fuchsia-500/15",
+                "bg-gradient-to-r from-purple-400/12 via-fuchsia-500/18 to-purple-400/12",
+                "bg-gradient-to-r from-cyan-400/12 via-purple-500/18 to-cyan-400/12",
+              ][i]
+            }`}
+            style={{
+              width: `${200 + i * 80}px`,
+              height: `${60 + i * 20}px`,
+              left: `${-10 + i * 25}%`,
+              top: `${10 + i * 15}%`,
+              borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%",
+            }}
+            animate={{
+              x: [0, 100, -50, 80, 0],
+              y: [0, -30, 40, -20, 0],
+              scaleX: [1, 1.3, 0.8, 1.2, 1],
+              scaleY: [1, 0.7, 1.4, 0.9, 1],
+              opacity: [0.4, 0.8, 0.3, 0.7, 0.4],
+              borderRadius: [
+                "50% 50% 50% 50% / 60% 60% 40% 40%",
+                "60% 40% 60% 40% / 50% 70% 30% 50%",
+                "40% 60% 40% 60% / 70% 30% 70% 30%",
+                "70% 30% 70% 30% / 40% 60% 40% 60%",
+                "50% 50% 50% 50% / 60% 60% 40% 40%",
+              ],
+            }}
+            transition={{
+              duration: 15 + i * 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 2,
+            }}
+          />
+        ))}
+
+        {/* Flowing Wave Ribbons */}
+        {Array.from({ length: 4 }).map((_, i) => (
+          <motion.div
+            key={`footer-wave-ribbon-${i}`}
+            className={`absolute blur-xl ${
+              [
+                "bg-gradient-to-r from-transparent via-purple-500/25 to-transparent",
+                "bg-gradient-to-r from-transparent via-cyan-500/25 to-transparent",
+                "bg-gradient-to-r from-transparent via-fuchsia-500/25 to-transparent",
+                "bg-gradient-to-r from-transparent via-purple-400/20 to-transparent",
+              ][i]
+            }`}
+            style={{
+              width: `${300 + i * 50}px`,
+              height: `${40 + i * 15}px`,
+              right: `${-20 + i * 15}%`,
+              bottom: `${20 + i * 20}%`,
+              borderRadius: "100px",
+              transform: `rotate(${15 + i * 10}deg)`,
+            }}
+            animate={{
+              x: [0, -60, 40, -30, 0],
+              y: [0, 25, -35, 20, 0],
+              scaleX: [1, 1.4, 0.6, 1.3, 1],
+              scaleY: [1, 0.8, 1.5, 0.7, 1],
+              opacity: [0.3, 0.7, 0.2, 0.8, 0.3],
+              rotate: [
+                15 + i * 10,
+                25 + i * 10,
+                5 + i * 10,
+                20 + i * 10,
+                15 + i * 10,
+              ],
+            }}
+            transition={{
+              duration: 18 + i * 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 2.5,
+            }}
+          />
+        ))}
+
+        {/* Dynamic Fading Color Elements */}
+        {Array.from({ length: 4 }).map((_, i) => (
+          <motion.div
+            key={`footer-color-fade-${i}`}
+            className={`absolute rounded-full blur-2xl ${
+              i % 3 === 0
+                ? "bg-dynamic-primary/15"
+                : i % 3 === 1
+                ? "bg-dynamic-secondary/15"
+                : "bg-dynamic-accent/15"
+            }`}
+            style={{
+              width: `${150 + i * 40}px`,
+              height: `${150 + i * 40}px`,
+              left: `${15 + i * 20}%`,
+              top: `${10 + i * 15}%`,
+            }}
+            animate={{
+              opacity: [0, 0.25, 0.08, 0.3, 0],
+              scale: [0.9, 1.1, 0.8, 1.2, 0.9],
+              x: [0, -30, 20, -15, 0],
+              y: [0, 25, -15, 30, 0],
+            }}
+            transition={{
+              duration: 10 + i * 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 2.5,
+            }}
+          />
+        ))}
+
+        {/* Floating gradient orbs */}
+        {Array.from({ length: 3 }).map((_, i) => (
+          <motion.div
+            key={`footer-gradient-orb-${i}`}
+            className={`absolute w-24 h-24 rounded-full blur-xl bg-gradient-to-tr ${
+              i % 3 === 0
+                ? "from-dynamic-accent/25 to-dynamic-primary/8"
+                : i % 3 === 1
+                ? "from-dynamic-primary/25 to-dynamic-secondary/8"
+                : "from-dynamic-secondary/25 to-dynamic-accent/8"
+            }`}
+            style={{
+              right: `${5 + i * 30}%`,
+              bottom: `${15 + i * 25}%`,
+            }}
+            animate={{
+              opacity: [0.05, 0.4, 0.15, 0.5, 0.05],
+              rotate: [0, -120, -240, -360],
+              scale: [1, 1.4, 0.8, 1.3, 1],
+            }}
+            transition={{
+              duration: 14 + i * 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 3,
+            }}
+          />
+        ))}
+
+        {/* Soft Wave Layers */}
+        {Array.from({ length: 3 }).map((_, i) => (
+          <motion.div
+            key={`footer-wave-layer-${i}`}
+            className={`absolute blur-lg ${
+              [
+                "bg-gradient-to-br from-purple-500/20 via-purple-400/15 to-purple-600/10",
+                "bg-gradient-to-br from-cyan-500/20 via-cyan-400/15 to-cyan-600/10",
+                "bg-gradient-to-br from-fuchsia-500/20 via-fuchsia-400/15 to-fuchsia-600/10",
+              ][i]
+            } backdrop-blur-sm`}
+            style={{
+              width: `${180 + i * 60}px`,
+              height: `${80 + i * 30}px`,
+              left: `${25 + i * 20}%`,
+              top: `${50 + i * 15}%`,
+              borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
+            }}
+            animate={{
+              x: [0, 30, -20, 25, 0],
+              y: [0, -20, 35, -15, 0],
+              scaleX: [1, 1.2, 0.9, 1.3, 1],
+              scaleY: [1, 0.8, 1.4, 0.7, 1],
+              opacity: [0.5, 0.8, 0.3, 0.9, 0.5],
+              borderRadius: [
+                "60% 40% 30% 70% / 60% 30% 70% 40%",
+                "40% 60% 70% 30% / 40% 70% 30% 60%",
+                "70% 30% 40% 60% / 30% 60% 40% 70%",
+                "30% 70% 60% 40% / 70% 40% 60% 30%",
+                "60% 40% 30% 70% / 60% 30% 70% 40%",
+              ],
+            }}
+            transition={{
+              duration: 20 + i * 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 2,
+            }}
+          />
+        ))}
+        {/* Static background elements (existing) */}
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-dynamic-primary/8 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-dynamic-accent/8 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -222,9 +464,19 @@ export default function Footer({
 
               <button
                 type="submit"
-                className="w-full px-8 py-4 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white font-semibold rounded-2xl transition-all duration-300 hover:from-violet-500 hover:via-purple-500 hover:to-fuchsia-500 hover:scale-105 hover:shadow-xl hover:shadow-violet-500/25 focus:outline-none focus:ring-2 focus:ring-violet-500/50 cursor-pointer"
+                disabled={isSubmitting}
+                className={`w-full px-8 py-4 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white font-semibold rounded-2xl transition-all duration-300 hover:from-violet-500 hover:via-purple-500 hover:to-fuchsia-500 hover:scale-105 hover:shadow-xl hover:shadow-violet-500/25 focus:outline-none focus:ring-2 focus:ring-violet-500/50 cursor-pointer ${
+                  isSubmitting ? "opacity-75 cursor-not-allowed scale-95" : ""
+                }`}
               >
-                Send Message
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <span>Sending...</span>
+                  </div>
+                ) : (
+                  "Send Message"
+                )}
               </button>
 
               <p className="text-sm text-gray-400 text-center">

@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import GalleryModal from "@/components/GalleryModal";
 import CreateLandingModal from "@/components/CreateLandingModal";
 import { createClient } from "@supabase/supabase-js";
+import { FacebookPixel } from "@/lib/facebook-pixel";
+
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -52,6 +54,70 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
     >
       {/* 3D Color Explosion Background */}
       <div className="absolute inset-0 z-0 overflow-hidden">
+        {/* Dynamic Fading Color Elements */}
+        {Array.from({ length: 6 }).map((_, i) => (
+          <motion.div
+            key={`color-fade-${i}`}
+            className={`absolute rounded-full blur-2xl ${
+              i % 3 === 0
+                ? "bg-dynamic-primary/20"
+                : i % 3 === 1
+                ? "bg-dynamic-secondary/20"
+                : "bg-dynamic-accent/20"
+            }`}
+            style={{
+              width: `${200 + i * 50}px`,
+              height: `${200 + i * 50}px`,
+              left: `${20 + i * 15}%`,
+              top: `${15 + i * 12}%`,
+            }}
+            animate={{
+              opacity: [0, 0.3, 0.1, 0.4, 0],
+              scale: [0.8, 1.2, 0.9, 1.1, 0.8],
+              x: [0, 50, -30, 40, 0],
+              y: [0, -40, 30, -20, 0],
+            }}
+            transition={{
+              duration: 8 + i * 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 1.5,
+            }}
+          />
+        ))}
+
+        {/* Floating gradient orbs */}
+        {Array.from({ length: 4 }).map((_, i) => (
+          <motion.div
+            key={`gradient-orb-${i}`}
+            className={`
+				absolute w-32 h-32 rounded-full blur-xl
+              bg-gradient-to-br ${
+                i % 3 === 0
+                  ? "from-dynamic-primary/30 to-dynamic-secondary/10"
+                  : i % 3 === 1
+                  ? "from-dynamic-secondary/30 to-dynamic-accent/10"
+                  : "from-dynamic-accent/30 to-dynamic-primary/10"
+              }
+            `}
+            style={{
+              left: `${10 + i * 25}%`,
+              top: `${20 + i * 20}%`,
+            }}
+            animate={{
+              opacity: [0.1, 0.5, 0.2, 0.6, 0.1],
+              rotate: [0, 180, 360],
+              scale: [1, 1.3, 0.7, 1.2, 1],
+            }}
+            transition={{
+              duration: 12 + i * 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 2,
+            }}
+          />
+        ))}
+
         {/* Main explosion center */}
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           {/* Rotating color rings */}
@@ -64,7 +130,7 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
               rotate: { duration: 20, repeat: Infinity, ease: "linear" },
               scale: { duration: 8, repeat: Infinity, ease: "easeInOut" },
             }}
-            className="w-[800px] h-[800px] rounded-full border-4 border-dynamic-accent/10"
+            className="w-[800px] h-[800px] rounded-full border-3 border-dynamic-accent/2"
           />
 
           <motion.div
@@ -76,7 +142,7 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
               rotate: { duration: 25, repeat: Infinity, ease: "linear" },
               scale: { duration: 6, repeat: Infinity, ease: "easeInOut" },
             }}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border-4 border-dynamic-secondary/10"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-dynamic-secondary/10"
           />
 
           <motion.div
@@ -88,7 +154,7 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
               rotate: { duration: 15, repeat: Infinity, ease: "linear" },
               scale: { duration: 10, repeat: Infinity, ease: "easeInOut" },
             }}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border-4 border-cyan-500/15"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border-2 border-cyan-500/10"
           />
         </div>
 
@@ -180,7 +246,6 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
           }}
         />
 
-        {/* Subtle grid pattern overlay */}
         <div className="absolute inset-0 opacity-5">
           <div
             className="w-full h-full"
@@ -191,7 +256,6 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
           />
         </div>
 
-        {/* Dynamic color waves */}
         <motion.div
           className="absolute inset-0"
           animate={{
@@ -212,9 +276,7 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
 
       {/* Content Container with Glass Effect */}
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        {/* Botanical Card Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          {/* Left Side - Main Content */}
           <div className="text-left space-y-8">
             <motion.h1
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -257,7 +319,10 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
               className="pt-4"
             >
               <button
-                onClick={() => setIsCreateModalOpen(true)}
+                onClick={() => {
+  FacebookPixel.trackLead({ button: "create-landing" });
+  setIsCreateModalOpen(true);
+}}
                 className="
                   group inline-flex items-center justify-center gap-3
                   px-8 py-4 
@@ -290,7 +355,6 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
             </motion.div>
           </div>
 
-          {/* Right Side - Glass Card */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -327,10 +391,12 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
                   </div>
                 </div>
 
-                {/* View Gallery Button */}
                 <div className="pt-4">
                   <button
-                    onClick={() => setIsGalleryOpen(true)}
+                    onClick={() => {
+  FacebookPixel.trackEvent("ViewGalleryClick", { button: "gallery" });
+  setIsGalleryOpen(true);
+}}
                     className="
                       w-full px-6 py-3 
                       bg-white/10 backdrop-blur-md 
@@ -377,7 +443,6 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
         </div>
       </div>
 
-      {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -407,7 +472,6 @@ export default function Hero({ title, buttonText, onButtonClick }: HeroProps) {
         isOpen={isCreateModalOpen}
         onClose={() => {
           setIsCreateModalOpen(false);
-          // Refresh landing count after creating a new landing
           fetchLandingCount();
         }}
       />

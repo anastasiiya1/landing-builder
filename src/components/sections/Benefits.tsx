@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
 
 interface Benefit {
   icon: string;
@@ -21,55 +23,30 @@ const BenefitCard = ({
   benefit: Benefit;
   index: number;
 }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="
-        group relative p-8 
-        bg-white/5 backdrop-blur-md 
-        rounded-3xl border border-white/10
-        hover:bg-white/10 hover:border-white/20
-        transition-all duration-300 ease-in-out
-        overflow-hidden
-      "
-    >
+    <Card index={index} glowEffect={true}>
       {/* Number indicator with modern gradient */}
-      <div className="absolute top-6 right-6 w-12 h-12 rounded-full bg-dynamic-primary flex items-center justify-center shadow-lg">
+      {/* <div className="absolute top-6 right-6 w-12 h-12 rounded-full bg-dynamic-primary flex items-center justify-center shadow-lg">
         <span className="text-white font-bold text-lg">{index + 1}</span>
-      </div>
+      </div> */}
 
       {/* Subtle glow effect with modern colors */}
-      <div className="absolute inset-0 bg-dynamic-glow opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-dynamic-glow opacity-0 transition-opacity duration-500" />
 
       <div className="relative">
-        <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">
+        <div className="flex gap-4 align-middle text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">
           {benefit.icon}
+          <h3 className="text-xl font-semibold text-white mb-4 group-hover:text-dynamic-accent transition-colors duration-300">
+            {benefit.title}
+          </h3>
         </div>
-        <h3
-          className={`text-xl font-semibold mb-4 transition-colors duration-300 ${
-            index % 4 === 0
-              ? "text-violet-400 group-hover:text-violet-300"
-              : index % 4 === 1
-              ? "text-purple-400 group-hover:text-purple-300"
-              : index % 4 === 2
-              ? "text-fuchsia-400 group-hover:text-fuchsia-300"
-              : "text-cyan-400 group-hover:text-cyan-300"
-          }`}
-        >
-          {benefit.title}
-        </h3>
+
         <p className="text-gray-300 leading-relaxed">{benefit.description}</p>
       </div>
 
       {/* Bottom accent line with matching gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-dynamic-accent transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700" />
-    </motion.div>
+      <div className="absolute bottom-[-12px] left-0 right-0 h-1 bg-dynamic-accent transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700" />
+    </Card>
   );
 };
 
@@ -77,8 +54,6 @@ export default function Benefits({ benefits }: BenefitsProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [currentSlide, setCurrentSlide] = useState(0);
-  const sectionRef = useRef(null);
-  const sectionInView = useInView(sectionRef, { once: true, margin: "-50px" });
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % Math.min(benefits.length, 4));
@@ -92,14 +67,7 @@ export default function Benefits({ benefits }: BenefitsProps) {
   };
 
   return (
-    <motion.section
-      ref={sectionRef}
-      initial={{ opacity: 0, x: -100 }}
-      animate={sectionInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      id="benefits"
-      className="py-20 bg-black relative overflow-hidden"
-    >
+    <Section id="benefits">
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 right-0 w-96 h-96 bg-dynamic-glow rounded-full blur-3xl animate-pulse" />
@@ -208,6 +176,6 @@ export default function Benefits({ benefits }: BenefitsProps) {
           </div>
         </div>
       </div>
-    </motion.section>
+    </Section>
   );
 }
